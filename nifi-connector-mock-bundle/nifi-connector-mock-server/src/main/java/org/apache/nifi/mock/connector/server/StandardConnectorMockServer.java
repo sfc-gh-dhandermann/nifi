@@ -50,6 +50,7 @@ import org.apache.nifi.connectable.FlowFileTransferCounts;
 import org.apache.nifi.controller.ControllerService;
 import org.apache.nifi.controller.DecommissionTask;
 import org.apache.nifi.controller.FlowController;
+import org.apache.nifi.controller.metrics.ComponentMetricReporter;
 import org.apache.nifi.controller.metrics.DefaultComponentMetricReporter;
 import org.apache.nifi.controller.repository.FlowFileEventRepository;
 import org.apache.nifi.controller.repository.metrics.RingBufferEventRepository;
@@ -132,6 +133,7 @@ public class StandardConnectorMockServer implements ConnectorMockServer {
         extensionManager.discoverExtensions(systemBundle, bundles);
         extensionManager.logClassLoaderMapping();
 
+        final ComponentMetricReporter componentMetricReporter = new DefaultComponentMetricReporter();
         final FlowFileEventRepository flowFileEventRepository = new RingBufferEventRepository(5);
         final Authorizer authorizer = new PermitAllAuthorizer();
         final AuditService auditService = new MockAuditService();
@@ -147,7 +149,7 @@ public class StandardConnectorMockServer implements ConnectorMockServer {
             nifiProperties,
             authorizer,
             auditService,
-            new DefaultComponentMetricReporter(),
+            componentMetricReporter,
             propertyEncryptor,
             bulletinRepository,
             extensionManager,
